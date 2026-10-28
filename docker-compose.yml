@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app  # local demo only, never use this in production
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      interval: 5s
+      retries: 10
+
+  accounts:
+    build: ./services/accounts
+    environment:
+      DATABASE_URL: postgresql://app:app@postgres:5432/accounts
+    ports:
+      - "8001:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  trades:
+    build: ./services/trades
+    environment:
+      DATABASE_URL: postgresql://app:app@postgres:5432/trades
+      ACCOUNTS_URL: http://accounts:8000
+    ports:
+      - "8002:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      accounts:
+        condition: service_started
+
+volumes:
+  pgdata:
