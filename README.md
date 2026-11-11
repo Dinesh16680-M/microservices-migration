@@ -1,6 +1,6 @@
 # Legacy App to Microservices Migration
 
-> This README was generated with [Claude](https://claude.ai) by Anthropic under my command and properly checked by me.
+
 
 ![Python](https://img.shields.io/badge/Python-FastAPI-009688?logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
